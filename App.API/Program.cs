@@ -1,7 +1,5 @@
-using App.Repositories;
 using App.Repositories.Extensions;
 using App.Services.Extensions;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+// For Swagger
+builder.Services.AddSwaggerGen();
+
 builder.Services.AddRepositories(builder.Configuration).AddServices(builder.Configuration);
 
 
@@ -19,6 +21,9 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    // For Swagger
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
