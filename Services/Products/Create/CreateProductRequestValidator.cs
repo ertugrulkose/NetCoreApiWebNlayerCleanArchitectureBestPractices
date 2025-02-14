@@ -2,9 +2,9 @@
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
-namespace App.Services.Products
+namespace App.Services.Products.Create
 {
-    public class CreateProductRequestValidator:AbstractValidator<CreateProductRequest>
+    public class CreateProductRequestValidator : AbstractValidator<CreateProductRequest>
     {
         private readonly IProductRepository _productRepository;
         public CreateProductRequestValidator(IProductRepository productRepository)
@@ -14,8 +14,8 @@ namespace App.Services.Products
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Ürün İsmi Gereklidir.")
                 .Length(2, 100).WithMessage("Ürün İsmi 2-100 Karakter Arasında Olmalıdır.");
-                //.MustAsync(MustUniqueProductNameAsync).WithMessage("Ürün İsmi Veritabanında Bulunmaktadır.");
-                //.Must(MustUniqueProductName).WithMessage("Ürün İsmi Veritabanında Bulunmaktadır.");
+            //.MustAsync(MustUniqueProductNameAsync).WithMessage("Ürün İsmi Veritabanında Bulunmaktadır.");
+            //.Must(MustUniqueProductName).WithMessage("Ürün İsmi Veritabanında Bulunmaktadır.");
 
 
             // price validation
@@ -28,7 +28,7 @@ namespace App.Services.Products
         }
 
         #region 2. Way async validation
-         
+
         //private async Task<bool> MustUniqueProductNameAsync(string name, CancellationToken cancellationToken) 
         //{
         //    // async validation için ServiceExtension.cs içerisinde AddFluentValidationAutoValidation() metodu kapatılmalıdır.
@@ -37,7 +37,7 @@ namespace App.Services.Products
         #endregion
 
         #region 1. Way sync validation
-        
+
         //private bool MustUniqueProductName(string name)
         //{
         //    return !_productRepository.Where(x => x.Name == name).Any();

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using App.Services.Products.Create;
+using App.Services.Products.Update;
+using Microsoft.AspNetCore.Mvc;
 
 namespace App.Services.Products
 {
