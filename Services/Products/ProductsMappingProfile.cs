@@ -1,15 +1,14 @@
 ﻿using App.Repositories.Products;
-using App.Services.Products;
 using App.Services.Products.Create;
 using App.Services.Products.Update;
 using AutoMapper;
 
-namespace App.Services.Mapping
+namespace App.Services.Products
 {
-    public class MappingProfile:Profile
+    public class ProductsMappingProfile : Profile
     {
-        public MappingProfile() 
-        { 
+        public ProductsMappingProfile()
+        {
             CreateMap<Product, ProductDto>().ReverseMap();
 
             // To lower name
