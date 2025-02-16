@@ -24,7 +24,7 @@ namespace App.Services.Products.Create
 
             // stock InclusiveBetween validation
             RuleFor(x => x.Stock)
-                .InclusiveBetween(1, 100).WithMessage("Stok 1 ile 100 Arasında Olmalıdır.");
+                .InclusiveBetween(1, 1000).WithMessage("Stok 1 ile 1000 Arasında Olmalıdır.");
         }
 
         #region 2. Way async validation

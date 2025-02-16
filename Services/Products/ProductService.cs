@@ -3,6 +3,7 @@ using App.Repositories.Products;
 using App.Services.ExceptionHandlers;
 using App.Services.Products.Create;
 using App.Services.Products.Update;
+using App.Services.Products.UpdateStock;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -104,6 +105,13 @@ namespace App.Services.Products
                 return ServiceResult.Fail("Product not found", HttpStatusCode.NotFound);
             }
 
+            var isProductNameExist = await productRepository.Where(x => x.Name == request.Name && x.Id != product.Id).AnyAsync();
+
+            if (isProductNameExist)
+            {
+                return ServiceResult.Fail("Ürün İsmi Veritabanında Bulunmaktadır.", HttpStatusCode.BadRequest);
+            }
+
             product.Name = request.Name;
             product.Price = request.Price;
             product.Stock = request.Stock;
@@ -113,7 +121,7 @@ namespace App.Services.Products
 
             return ServiceResult.Success(HttpStatusCode.NoContent);
         }
-
+        
         public async Task<ServiceResult> UpdateStockAsync(UpdateProductStockRequest request)
         {
             var product = await productRepository.GetByIdAsync(request.ProductId);
