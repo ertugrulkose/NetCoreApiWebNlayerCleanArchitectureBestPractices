@@ -1,6 +1,5 @@
 ﻿using App.Repositories;
 using App.Repositories.Products;
-using App.Services.ExceptionHandlers;
 using App.Services.Products.Create;
 using App.Services.Products.Update;
 using App.Services.Products.UpdateStock;
@@ -16,7 +15,7 @@ namespace App.Services.Products
         {
             var products = await productRepository.GetTopPriceProductsAsync(count);
 
-            var productsAsDto = products.Select(p => new ProductDto(p.Id, p.Name, p.Price,p.Stock)).ToList();
+            var productsAsDto = mapper.Map<List<ProductDto>>(products);
 
             return new ServiceResult<List<ProductDto>>()
             {
@@ -85,12 +84,8 @@ namespace App.Services.Products
                 return ServiceResult<CreateProductResponse>.Fail("Ürün İsmi Veritabanında Bulunmaktadır.", HttpStatusCode.BadRequest);
             }
 
-            var product = new Product()
-            {
-                Name = request.Name,
-                Price = request.Price,
-                Stock = request.Stock
-            };
+            var product = mapper.Map<Product>(request);
+
             await productRepository.AddAsync(product);
             await unitOfWork.SaveChangesAsync();
             return ServiceResult<CreateProductResponse>.SuccessAsCreated(new CreateProductResponse(product.Id),$"api/products/{product.Id}");
@@ -112,9 +107,11 @@ namespace App.Services.Products
                 return ServiceResult.Fail("Ürün İsmi Veritabanında Bulunmaktadır.", HttpStatusCode.BadRequest);
             }
 
-            product.Name = request.Name;
-            product.Price = request.Price;
-            product.Stock = request.Stock;
+            //product.Name = request.Name;
+            //product.Price = request.Price;
+            //product.Stock = request.Stock;
+
+            product = mapper.Map(request, product);
 
             productRepository.Update(product);
             await unitOfWork.SaveChangesAsync();
