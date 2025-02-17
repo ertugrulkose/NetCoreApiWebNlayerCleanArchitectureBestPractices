@@ -14,6 +14,10 @@ namespace App.Services.Products.Update
             RuleFor(x => x.Price)
                 .GreaterThan(0).WithMessage("Fiyat 0'dan Büyük Olmalıdır.");
 
+            // category validation
+            RuleFor(x => x.CategoryId)
+                .GreaterThan(0).WithMessage("Ürün Kategori Değeri 0'dan Büyük Olmalıdır.");
+
             // stock InclusiveBetween validation
             RuleFor(x => x.Stock)
                 .InclusiveBetween(1, 1000).WithMessage("Stok 1 ile 1000 Arasında Olmalıdır.");
