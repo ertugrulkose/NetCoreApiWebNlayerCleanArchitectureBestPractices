@@ -1,7 +1,6 @@
 using App.Repositories.Extensions;
 using App.Services;
 using App.Services.Extensions;
-using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,9 +12,6 @@ builder.Services.AddControllers(options =>
     // Turn off default nullable reference types control
     // options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
 });
-
-// Turn off the default ModelState validation filter
-builder.Services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
