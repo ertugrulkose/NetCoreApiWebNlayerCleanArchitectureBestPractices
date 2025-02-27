@@ -1,4 +1,6 @@
+using App.Application.Contracts.Caching;
 using App.Application.Extensions;
+using App.Caching;
 using App.Persistence;
 using CleanApp.API.ExceptionHandler;
 using CleanApp.API.Filters;
@@ -21,6 +23,10 @@ builder.Services.AddScoped(typeof(NotFoundFilter<,>));
 // for ExceptionHandler
 builder.Services.AddExceptionHandler<CriticalExceptionHandler>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
+// for Memory Cache
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<ICacheService,CacheService>();
 
 // For Swagger
 builder.Services.AddSwaggerGen();
