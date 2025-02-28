@@ -1,10 +1,7 @@
-using App.Application.Contracts.Caching;
 using App.Application.Extensions;
-using App.Caching;
+using App.Bus;
 using App.Persistence;
-using CleanApp.API.ExceptionHandler;
 using CleanApp.API.Extensions;
-using CleanApp.API.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithFiltersExt().AddSwaggerGenExt().AddExceptionHandlerExt().AddMemoryCacheExt();
 
-builder.Services.AddRepositories(builder.Configuration).AddServices(builder.Configuration);
+builder.Services.AddRepositories(builder.Configuration).AddServices(builder.Configuration).AddBusExt(builder.Configuration);
 
 var app = builder.Build();
 
