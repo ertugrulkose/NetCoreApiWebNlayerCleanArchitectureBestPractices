@@ -19,6 +19,10 @@ namespace App.Services.Categories
 
             CreateMap<UpdateCategoryRequest, Category>().ForMember(dest => dest.Name,
                 opt => opt.MapFrom(src => src.Name.ToLowerInvariant()));
+
+            // 🆕 Kategori -> CategoryWithSubcategoriesDto (Alt kategorileri de dönüştürür!)
+            CreateMap<Category, CategoryWithSubcategoriesDto>()
+                .ForMember(dest => dest.SubCategories, opt => opt.MapFrom(src => src.SubCategories ?? new List<Category>()));
         }
     }
 }

@@ -21,6 +21,9 @@ namespace App.API.Controllers
         [HttpGet("{id}/products")]
         public async Task<IActionResult> GetCategoryWithProducts(int id) => CreateActionResult(await categoryService.GetCategoryWithProductsAsync(id));
 
+        [HttpGet("{id}/subcategories")]
+        public async Task<IActionResult> GetCategoryWithSubcategories(int id) => CreateActionResult(await categoryService.GetCategoryWithSubcategoriesAsync(id));
+
         [HttpPost]
         public async Task<IActionResult> CreateCategory(CreateCategoryRequest request) => CreateActionResult(await categoryService.CreateAsync(request));
 

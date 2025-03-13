@@ -54,8 +54,22 @@ namespace App.Services.Categories
             return ServiceResult<CategoryDto>.Success(categoryAsDto);
         }
 
+        public async Task<ServiceResult<CategoryWithSubcategoriesDto>> GetCategoryWithSubcategoriesAsync(int id)
+        {
+            var category = await categoryRepository.GetByIdWithSubcategoriesAsync(id);
+            if (category is null)
+            {
+                return ServiceResult<CategoryWithSubcategoriesDto>.Fail("Alt Kategori bulunamadı.",HttpStatusCode.NotFound);
+            }
+
+            var categoryAsDto = mapper.Map<CategoryWithSubcategoriesDto>(category);
+
+            return ServiceResult<CategoryWithSubcategoriesDto>.Success(categoryAsDto);
+        }
+
         public async Task<ServiceResult<int>> CreateAsync(CreateCategoryRequest request)
         {
+            // Aynı isimde bir kategori var mı kontrol et
             var anyCategory = await categoryRepository.Where(x => x.Name == request.Name).AnyAsync();
 
             if (anyCategory)
@@ -63,7 +77,19 @@ namespace App.Services.Categories
                 return ServiceResult<int>.Fail("Kategori İsmi Veritabanında Bulunmaktadır.", HttpStatusCode.NotFound);
             }
 
-            var newCategory = mapper.Map<Category>(request);
+            // Eğer ParentCategoryId varsa geçerli olup olmadığı kontrol edilir
+            if (request.ParentCategoryId.HasValue)
+            {
+                var parentCategoryExists = await categoryRepository.Where(x => x.Id == request.ParentCategoryId).AnyAsync();
+                if (!parentCategoryExists)
+                {
+                    return ServiceResult<int>.Fail("Bağlı olduğu kategori bulunamadı.", HttpStatusCode.NotFound);
+                }
+            }
+
+
+            // Yeni kategori nesnesi oluştur
+            var newCategory = new Category(request.Name, request.ParentCategoryId);
 
             categoryRepository.AddAsync(newCategory);
             await unitOfWork.SaveChangesAsync();

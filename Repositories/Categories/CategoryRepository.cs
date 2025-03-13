@@ -13,5 +13,11 @@ namespace App.Repositories.Categories
         {
             return context.Categories.Include(x => x.Products).AsQueryable();
         }
+        public Task<Category?> GetByIdWithSubcategoriesAsync(int id)
+        {
+            return context.Categories
+                .Include(c => c.SubCategories)
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
     }
 }
