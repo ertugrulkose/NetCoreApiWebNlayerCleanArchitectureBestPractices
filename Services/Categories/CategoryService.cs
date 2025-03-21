@@ -77,19 +77,31 @@ namespace App.Services.Categories
                 return ServiceResult<int>.Fail("Kategori İsmi Veritabanında Bulunmaktadır.", HttpStatusCode.NotFound);
             }
 
-            // Eğer ParentCategoryId varsa geçerli olup olmadığı kontrol edilir
-            if (request.ParentCategoryId.HasValue)
+            // Geçersiz ParentCategoryId değerleri için kontrol (Negatif değer kabul edilmez)
+            if (request.ParentCategoryId < 0)
             {
-                var parentCategoryExists = await categoryRepository.Where(x => x.Id == request.ParentCategoryId).AnyAsync();
+                return ServiceResult<int>.Fail("Bağlı olduğu kategori geçersiz bir değere sahip.", HttpStatusCode.BadRequest);
+            }
+
+            // Eğer ParentCategoryId 0 olarak geldiyse bunu null olarak kabul et (Ana Kategori)
+            int? parentCategoryId = request.ParentCategoryId > 0 ? request.ParentCategoryId : null;
+
+            // Eğer ParentCategoryId varsa geçerli olup olmadığı kontrol edilir
+            if (parentCategoryId.HasValue)
+            {
+                var parentCategoryExists = await categoryRepository.Where(x => x.Id == parentCategoryId).AnyAsync();
                 if (!parentCategoryExists)
                 {
                     return ServiceResult<int>.Fail("Bağlı olduğu kategori bulunamadı.", HttpStatusCode.NotFound);
                 }
             }
 
-
             // Yeni kategori nesnesi oluştur
-            var newCategory = new Category(request.Name, request.ParentCategoryId);
+            var newCategory = new Category(request.Name, parentCategoryId);
+
+            // Mapleme yapılan hali. Mapleme yapmadık çünkü parentCategoryId için özel işlemler uyguladık
+            //var newCategory = mapper.Map<Category>(request);
+            //newCategory.ParentCategoryId = parentCategoryId;
 
             categoryRepository.AddAsync(newCategory);
             await unitOfWork.SaveChangesAsync();

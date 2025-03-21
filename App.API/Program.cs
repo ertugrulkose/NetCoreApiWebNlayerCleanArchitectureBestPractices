@@ -19,8 +19,21 @@ builder.Services.AddOpenApi();
 // For Swagger
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddRepositories(builder.Configuration).AddServices(builder.Configuration);
+// CORS AYARLARI EKLENDÝ 
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", builder =>
+    {
+        builder.WithOrigins("http://localhost:5173") // Frontend'in adresi
+            .AllowAnyMethod() // GET, POST, PUT, DELETE her þeye izin ver
+            .AllowAnyHeader() // Authorization, Content-Type gibi tüm header'larý kabul et
+            .AllowCredentials(); // Eðer JWT veya Cookie tabanlý kimlik doðrulama varsa bunu aç
+    });
+});
+
+
+builder.Services.AddRepositories(builder.Configuration).AddServices(builder.Configuration);
 
 var app = builder.Build();
 
@@ -36,6 +49,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// CORS DEVREYE ALINDI 
+app.UseCors("AllowFrontend");
 
 app.UseAuthorization();
 

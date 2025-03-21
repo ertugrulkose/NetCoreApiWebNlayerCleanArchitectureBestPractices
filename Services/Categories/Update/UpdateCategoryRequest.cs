@@ -1,3 +1,3 @@
 ﻿namespace App.Services.Categories.Update;
 
-public record UpdateCategoryRequest(string Name);
+public record UpdateCategoryRequest(string Name, int? ParentCategoryId);
